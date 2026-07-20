@@ -39,7 +39,7 @@ const STAGES = [
   },
   {
     hr: 14,
-    temp: 145,
+    temp: 203,
     tag: 'The rest',
     copy: "An hour in the cooler, minimum. The hardest part of a fourteen-hour cook is the part where you don't slice. It's done when it's done.",
   },
