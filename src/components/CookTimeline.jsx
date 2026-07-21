@@ -115,7 +115,7 @@ export default function CookTimeline() {
           { color: INK_SOFT, duration: 1.4, ease: 'power2.inOut' },
           wrapAt - 0.3,
         )
-        tl.to('.cook .eyebrow', { color: '#a34a1a', duration: 1.4, ease: 'power2.inOut' }, wrapAt - 0.3)
+        tl.to('.cook .eyebrow', { color: '#7f370f', duration: 1.4, ease: 'power2.inOut' }, wrapAt - 0.3)
         tl.fromTo(
           '.cook-wrapnote',
           { autoAlpha: 0, y: 12 },

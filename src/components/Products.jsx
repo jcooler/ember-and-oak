@@ -154,7 +154,11 @@ export default function Products() {
             </div>
             <h3 className="product-name">{p.name}</h3>
             <p className="product-desc">{p.desc}</p>
-            <button className="product-add" type="button">
+            <button
+              className="product-add"
+              type="button"
+              aria-label={`Add ${p.name} ${p.sub.toLowerCase()} to box`}
+            >
               Add to box
             </button>
           </article>

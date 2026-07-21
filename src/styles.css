@@ -13,6 +13,7 @@
   --smoke: #a39a8f;
   --bone: #f1e9dc;
   --ink: #241408;
+  --rust: #7f370f; /* darkest rust that holds 4.5:1 on --paper */
 
   --font-display: 'Big Shoulders', 'Arial Narrow', sans-serif;
   --font-body: 'Archivo', 'Helvetica Neue', sans-serif;
@@ -577,7 +578,7 @@ body::after {
 }
 
 .products .eyebrow {
-  color: #a34a1a;
+  color: var(--rust);
 }
 
 .products-title {
@@ -640,7 +641,7 @@ body::after {
 .product-num {
   display: flex;
   justify-content: space-between;
-  color: #a34a1a;
+  color: var(--rust);
   border-top: 1.5px solid var(--ink);
   padding-top: 0.8rem;
   margin-top: 1rem;
@@ -678,7 +679,7 @@ body::after {
 }
 
 .product-add:hover {
-  color: #a34a1a;
+  color: var(--rust);
 }
 
 /* ============================================================
