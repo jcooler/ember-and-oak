@@ -11,9 +11,13 @@ import BuyCta from './components/BuyCta.jsx'
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 export default function App() {
-  // web fonts change metrics enough to move pin positions, so refresh once loaded
   useEffect(() => {
-    document.fonts?.ready.then(() => ScrollTrigger.refresh())
+    const refresh = async () => {
+      await document.fonts?.ready
+      await Promise.all(Array.from(document.images).map((image) => image.decode?.().catch(() => {})))
+      ScrollTrigger.refresh()
+    }
+    refresh()
   }, [])
 
   return (
@@ -26,8 +30,9 @@ export default function App() {
         <BuyCta />
       </main>
       <footer className="footer">
-        <span className="mono">© 2026 Ember &amp; Oak Smoke Co.</span>
-        <span className="mono">Lockhart, Texas · pit@emberandoak.com</span>
+        <a className="footer-mark display" href="#top">Ember <em>&amp;</em> Oak</a>
+        <p className="mono">Small-batch smoke goods<br />Lockhart, Texas</p>
+        <p className="mono">© 2026 Ember &amp; Oak Smoke Co.<br /><a href="mailto:pit@emberandoak.com">pit@emberandoak.com</a></p>
       </footer>
     </>
   )

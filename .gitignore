@@ -1,5 +1,10 @@
 node_modules/
 dist/
 shots/
+baseline/
+final-labeled/
+final-shots/
+preview-assets/
+review-labels/
 *.local
 .DS_Store

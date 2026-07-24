@@ -1,66 +1,38 @@
 import { useRef } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Embers from './Embers.jsx'
-
-gsap.registerPlugin(ScrollTrigger)
+import pitBox from '../assets/generated/pit-box-four-product-set.webp'
 
 export default function BuyCta() {
   const root = useRef(null)
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia()
-      const targets = '.buy > *:not(.fx-canvas)'
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.from(targets, {
-          y: 40,
-          autoAlpha: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          stagger: 0.1,
-          scrollTrigger: {
-            trigger: root.current,
-            start: 'top 72%',
-            toggleActions: 'play none none reverse',
-          },
-        })
+  useGSAP(() => {
+    const mm = gsap.matchMedia()
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.from('.buy-reveal', {
+        autoAlpha: 0, y: 38, duration: 0.85, stagger: 0.1, ease: 'power3.out',
+        scrollTrigger: { trigger: root.current, start: 'top 70%', once: true },
       })
-      mm.add('(prefers-reduced-motion: reduce)', () => {
-        gsap.from(targets, {
-          autoAlpha: 0,
-          duration: 0.7,
-          ease: 'power1.out',
-          stagger: 0.08,
-          scrollTrigger: { trigger: root.current, start: 'top 75%', once: true },
-        })
-      })
-    },
-    { scope: root },
-  )
+    })
+    return () => mm.revert()
+  }, { scope: root })
 
   return (
     <section className="buy" ref={root} aria-labelledby="buy-title" id="buy">
-      <Embers emberCount={22} smokeCount={5} />
-      <h2 className="buy-title display" id="buy-title">
-        Get on <em>the fire</em>
-      </h2>
-      <p className="buy-sub">
-        The Pit Box: all four numbers in one crate. Both rubs, both sauces, and a roll of
-        peach butcher paper, because now you know what it's for.
-      </p>
-      <div className="buy-actions">
-        <a className="btn" href="#buy">
-          Buy the Pit Box · $45
-        </a>
-        <a className="btn btn--ghost" href="#lineup">
-          Start with Nº 1 · $14
-        </a>
+      <div className="buy-image buy-reveal">
+        <img src={pitBox} alt="Pit Box with two rub tins and two sauce bottles packed in peach butcher paper" width="1168" height="880" loading="lazy" />
+        <span className="buy-stamp mono">4 products / 1 box</span>
       </div>
-      <p className="buy-note mono">
-        Blended weekly in Lockhart, Texas · ships Mondays · free shipping over $40
-      </p>
+      <div className="buy-copy">
+        <span className="eyebrow buy-reveal">For the next long Saturday</span>
+        <h2 className="buy-title display buy-reveal" id="buy-title">The<br />Pit Box.</h2>
+        <p className="buy-price display buy-reveal">$45</p>
+        <p className="buy-reveal">Blackline, Yardbird, Mop &amp; Tang, and Burnt End—packed with folded peach butcher paper.</p>
+        <ul className="buy-list mono buy-reveal" aria-label="Pit Box contents">
+          <li>2 × 4 oz rub tins</li><li>2 × 12 oz sauces</li><li>Peach butcher paper</li>
+        </ul>
+        <a className="btn buy-reveal" href="mailto:pit@emberandoak.com?subject=Pit%20Box%20order">Order the Pit Box</a>
+        <p className="buy-shipping mono buy-reveal">Ships Mondays · free U.S. shipping over $40</p>
+      </div>
     </section>
   )
 }

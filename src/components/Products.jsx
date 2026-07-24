@@ -1,166 +1,70 @@
 import { useRef } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Tin, Bottle } from './ProductArt.jsx'
-
-gsap.registerPlugin(ScrollTrigger)
+import blackline from '../assets/generated/blackline-no1-tin.webp'
+import yardbird from '../assets/generated/yardbird-no2-tin.webp'
+import mop from '../assets/generated/mop-and-tang-no3-bottle.webp'
+import burnt from '../assets/generated/burnt-end-no4-bottle.webp'
 
 const PRODUCTS = [
-  {
-    num: '1',
-    name: 'BLACKLINE',
-    sub: 'BEEF RUB',
-    accent: '#ff5a1f',
-    price: '$14',
-    kind: 'tin',
-    desc: 'Coarse 16-mesh pepper, kosher salt, oak-smoked paprika. The signature. Built for brisket bark.',
-  },
-  {
-    num: '2',
-    name: 'YARDBIRD',
-    sub: 'POULTRY RUB',
-    accent: '#ffb25e',
-    price: '$12',
-    kind: 'tin',
-    desc: 'Honey powder, sage, white pepper. Crisps chicken skin like it has something to prove.',
-  },
-  {
-    num: '3',
-    name: 'MOP & TANG',
-    sub: 'VINEGAR SAUCE',
-    accent: '#e8935c',
-    price: '$11',
-    kind: 'bottle',
-    desc: 'Carolina-style cider vinegar with a slow cayenne burn. Thin on purpose. It works, not coats.',
-  },
-  {
-    num: '4',
-    name: 'BURNT END',
-    sub: 'MOLASSES GLAZE',
-    accent: '#c96f5a',
-    price: '$13',
-    kind: 'bottle',
-    desc: 'Molasses, espresso, guajillo. Lacquers ribs to a mahogany shine in the last hour.',
-  },
+  { num: '1', name: 'Blackline', sub: 'Beef rub', price: '$14', accent: '#ff5a1f', image: blackline, desc: '16-mesh pepper, kosher salt, oak-smoked paprika. Built for a brisket bark that stays put.' },
+  { num: '2', name: 'Yardbird', sub: 'Poultry rub', price: '$12', accent: '#ffb25e', image: yardbird, desc: 'Honey powder, sage, and white pepper. Savory first, with enough sugar to crisp the skin.' },
+  { num: '3', name: 'Mop & Tang', sub: 'Vinegar sauce', price: '$11', accent: '#e8935c', image: mop, desc: 'Cider vinegar and a slow cayenne burn. Thin on purpose—it works into pulled pork, not over it.' },
+  { num: '4', name: 'Burnt End', sub: 'Molasses glaze', price: '$13', accent: '#c96f5a', image: burnt, desc: 'Molasses, espresso, and guajillo. Brush it on in the last hour for a dark mahogany lacquer.' },
 ]
 
 export default function Products() {
   const root = useRef(null)
-
-  const { contextSafe } = useGSAP(
-    () => {
-      const mm = gsap.matchMedia()
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.from('.product', {
-          y: 60,
-          autoAlpha: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          stagger: 0.1,
-          scrollTrigger: {
-            trigger: '.products-grid',
-            start: 'top 78%',
-            toggleActions: 'play none none reverse',
-          },
-        })
-        gsap.from('.products-head > *', {
-          y: 36,
-          autoAlpha: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-          stagger: 0.1,
-          scrollTrigger: {
-            trigger: root.current,
-            start: 'top 72%',
-            toggleActions: 'play none none reverse',
-          },
-        })
+  useGSAP((_, contextSafe) => {
+    const mm = gsap.matchMedia()
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.from('.product', {
+        autoAlpha: 0, y: 42, duration: 0.8, stagger: 0.1, ease: 'power3.out',
+        scrollTrigger: { trigger: '.products-grid', start: 'top 78%', once: true },
       })
-      mm.add('(prefers-reduced-motion: reduce)', () => {
-        gsap.from(['.products-head > *', '.product'], {
-          autoAlpha: 0,
-          duration: 0.7,
-          ease: 'power1.out',
-          stagger: 0.08,
-          scrollTrigger: { trigger: root.current, start: 'top 75%', once: true },
-        })
+    })
+    const enter = contextSafe((event) => {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+      gsap.to(event.currentTarget.querySelector('.product-photo-inner'), { y: -8, scale: 1.015, duration: 0.45, ease: 'power2.out', overwrite: 'auto' })
+    })
+    const leave = contextSafe((event) => {
+      gsap.to(event.currentTarget.querySelector('.product-photo-inner'), { y: 0, scale: 1, duration: 0.5, ease: 'power2.out', overwrite: 'auto' })
+    })
+    const products = root.current.querySelectorAll('.product')
+    products.forEach((el) => {
+      el.addEventListener('pointerenter', enter)
+      el.addEventListener('pointerleave', leave)
+    })
+    return () => {
+      mm.revert()
+      products.forEach((el) => {
+        el.removeEventListener('pointerenter', enter)
+        el.removeEventListener('pointerleave', leave)
       })
-    },
-    { scope: root },
-  )
-
-  // heat-bloom hover: the art lifts, an ember glow ignites underneath
-  const onEnter = contextSafe((e) => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const card = e.currentTarget
-    gsap.to(card.querySelector('.product-art'), {
-      y: -14,
-      rotation: -2,
-      duration: 0.5,
-      ease: 'power3.out',
-    })
-    gsap.to(card.querySelector('.product-glow'), {
-      autoAlpha: 1,
-      scale: 1.12,
-      duration: 0.5,
-      ease: 'power2.out',
-    })
-  })
-
-  const onLeave = contextSafe((e) => {
-    const card = e.currentTarget
-    gsap.to(card.querySelector('.product-art'), {
-      y: 0,
-      rotation: 0,
-      duration: 0.6,
-      ease: 'power3.out',
-    })
-    gsap.to(card.querySelector('.product-glow'), {
-      autoAlpha: 0,
-      scale: 1,
-      duration: 0.6,
-      ease: 'power2.out',
-    })
-  })
+    }
+  }, { scope: root })
 
   return (
     <section className="products" ref={root} aria-labelledby="products-title" id="lineup">
-      <div className="products-head">
-        <div>
-          <span className="eyebrow">numbered like we cook them</span>
-          <h2 className="products-title display" id="products-title">
-            The lineup
-          </h2>
-        </div>
-        <p className="products-intro">
-          Four numbers, one system: rub before the fire, sauce after it. Each one earned its
-          spot across a season of fourteen-hour cooks.
-        </p>
-      </div>
-
+      <header className="products-head">
+        <p className="eyebrow">Numbered in the order they hit the pit</p>
+        <h2 className="products-title display" id="products-title">The four<br />numbers.</h2>
+        <p>Two before the fire. Two at the finish. Each earns its place in the box.</p>
+      </header>
       <div className="products-grid">
-        {PRODUCTS.map((p) => (
-          <article className="product" key={p.num} onMouseEnter={onEnter} onMouseLeave={onLeave}>
-            <div className="product-art-wrap">
-              <div className="product-glow" aria-hidden="true" />
-              <div className="product-art">
-                {p.kind === 'tin' ? <Tin id={p.num} {...p} /> : <Bottle id={p.num} {...p} />}
+        {PRODUCTS.map((product, index) => (
+          <article className={`product product-${index + 1}`} key={product.num}>
+            <div className="product-photo">
+              <div className="product-photo-inner">
+                <img src={product.image} alt={`${product.name} Nº ${product.num} ${product.sub}`} width="440" height="584" loading="lazy" />
               </div>
             </div>
-            <div className="product-num mono">
-              <span>{`Nº ${p.num}`}</span>
-              <span>{p.price}</span>
+            <div className="product-info">
+              <div className="product-meta mono"><span>Nº {product.num} · {product.sub}</span><span>{product.price}</span></div>
+              <h3 className="product-name display">{product.name}</h3>
+              <p>{product.desc}</p>
+              <a className="text-link product-link" href="#buy" aria-label={`View purchase options for ${product.name}`}>Purchase options <span>→</span></a>
             </div>
-            <h3 className="product-name">{p.name}</h3>
-            <p className="product-desc">{p.desc}</p>
-            <button
-              className="product-add"
-              type="button"
-              aria-label={`Add ${p.name} ${p.sub.toLowerCase()} to box`}
-            >
-              Add to box
-            </button>
           </article>
         ))}
       </div>
